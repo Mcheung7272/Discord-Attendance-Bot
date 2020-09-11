@@ -13,6 +13,7 @@ memberList = []
 bot = commands.Bot(command_prefix='!')
 
 # !here command to track all attendees. List will not have repeats.
+# Enter the channel ID you want the bot to post in to reduce spam in main channels
 @bot.command(name='here')
 async def name(ctx):
     channel = bot.get_channel(int(Enter channel ID here))
