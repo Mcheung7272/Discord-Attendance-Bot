@@ -41,7 +41,7 @@ async def clear_error(ctx, error):
         await ctx.send("Sorry, you don't have permission to do that!")
 
 
-# !export command tells the bot to upload a downloadable text file for download listing all the attendees
+# !export command tells the bot to upload a downloadable text file listing all attendees
 @bot.command(name='export')
 async def export_command(channel):
     channel = bot.get_channel(int(Enter channel ID here))
