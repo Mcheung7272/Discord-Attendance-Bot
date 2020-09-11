@@ -1,0 +1,54 @@
+# bot.py
+import os
+import discord
+from discord.ext import commands
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+GUILD = os.getenv('GUILD_TOKEN')
+memberList = []
+
+
+bot = commands.Bot(command_prefix='!')
+
+# !here command to track all attendees. List will not have repeats.
+@bot.command(name='here')
+async def name(ctx):
+    channel = bot.get_channel(int(Enter channel ID here))
+    username = ctx.message.author.display_name
+    seen = set(memberList)
+    if username not in seen:
+        seen.add(username)
+        memberList.append(username)
+    await channel.send('Thanks for joining us, ' + username + '!')
+
+# !clear command to clear the list for reuse. You can input what role is able to use the command.
+@bot.command(name='clear')
+@commands.has_role(Role Able To Use Command)
+async def clear_command(channel):
+    channel = bot.get_channel(int(Enter channel ID here))
+    memberList.clear()
+
+    await channel.send('Clear!')
+
+
+# error handling for when someone who doesn't have the designated role tries to clear the list
+@clear_command.error
+async def clear_error(ctx, error):
+    if isinstance(error, commands.MissingRole):
+        await ctx.send("Sorry, you don't have permission to do that!")
+
+
+# !export command tells the bot to upload a downloadable text file for download listing all the attendees
+@bot.command(name='export')
+async def export_command(channel):
+    channel = bot.get_channel(int(Enter channel ID here))
+    with open("file.txt", "w") as file:
+        file.write(str(memberList))
+    with open("file.txt", "rb") as file:
+        await channel.send("Your file is:", file=discord.File(file, "file.txt"))
+    await channel.send('Exported!')
+
+
+bot.run(TOKEN)
